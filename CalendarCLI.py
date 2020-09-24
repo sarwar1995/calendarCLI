@@ -10,16 +10,22 @@ class CLI:
     
 
     def prompt(self):
+        """ Prompt the user to enter a command via the CLI """
+
         print ('Enter Command:')
         print ('view, contacts, create, delete, load, save, quit')  
         cmd_entered = input()
         return cmd_entered
 
     def quit(self):
+        """ Exit the calendar application """
+
         print ('Calendar application closed')
         sys.exit(0)
 
     def create_engine(self):
+        """ Create a meeting or an event in the calendar and check for conflict with existing events """
+
         title = input('Title ?\n')
         date = input('Date ?\n')
         start_time = input('Start Time ?\n')
@@ -41,20 +47,20 @@ class CLI:
         return None
 
     def view_engine(self):
+        """ View either all events or all events associated with a particular contact in a sorted order """
+
         cmd_entered = input('"all" or "<contact name>"\n')
         if cmd_entered == 'all':
             self.NewCalendar.print_all_events()
-
         else:
-            thecontact = Contact(cmd_entered)
-            check_contact = self.NewCalendar.contact_present (thecontact)
-            if not check_contact:
+            status = self.NewCalendar.print_contact_meetings(cmd_entered)
+            if not status:
                 print('No such contact present. Quitting... \n')
                 self.quit()
-            else:
-                self.NewCalendar.list_of_contacts[check_contact[0]].print_meetings()
 
     def contact_engine(self):
+        """ View all contacts present in the calendar """
+
         sorted_contacts = self.NewCalendar.sort_contacts()
         for c in sorted_contacts:
             c.print_contact()
@@ -62,27 +68,27 @@ class CLI:
     def delete_engine(self, index):
         """ Deletes/removes the event at index (starting at 1) of the sorted list of events. Uses the __eq__ definition of
         the Event class to identify the meeting to be deleted in the Contact class's list_of_meetings and removes it.
-        Does not remove the contacts associated with the removed event """
+        Does not remove the contacts associated with the removed event """        
+        self.NewCalendar.delete_event(index)
 
-        meeting_to_be_deleted = self.NewCalendar.list_of_events[index-1]
-        print('Deleted this event')
-        meeting_to_be_deleted.print_event()
-        for c in self.NewCalendar.list_of_contacts:
-            c.delete_meeting(meeting_to_be_deleted)
-        self.NewCalendar.list_of_events.pop(index-1)
         
     def save_engine (self, file='calendar.csv'):
+        """ Saves the calendar in file """
+
         with open(file, 'w') as f:
-            for e in self.NewCalendar.list_of_events:
-                e.write_to_file(f)
+            self.NewCalendar.save(f)
         print(f"Saved to {file}")
 
     def load_engine (self, file='calendar.csv'):
+        """ Loads the calendar from file """
+
         with open(file, 'r') as f:
             self.NewCalendar.load(f)
         print(f"Loaded from {file}")
 
     def run(self):
+        """ Run the CLI """
+
         cmd_entered = self.prompt()
         while (cmd_entered != 'quit'):
             if cmd_entered == 'create': # Creating a new event
