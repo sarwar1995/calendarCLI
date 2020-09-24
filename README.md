@@ -1,4 +1,5 @@
 # calendarCLI
 This is an attempt at creating a calendar application using object-oriented programming in Python3.
 The calendar application uses a command line interface (CLI) to take inputs from user about creating, deleting, viewing, loading and saving events and/or meetings (i.e. events with contacts). 
-This branch adds the CLI object to the code
+To run this calendar use the CalendarCLI.py file runs the CLI and prompts you to add a command i.e. "create, delete, view, save and load". Currently each input from the user is taken in a new line and no spaces should be added in the inputs. Names of contacts are only first names and the comparison of contacts does exact matching of names so "mark" and "Mark" are taken as different people. Enter date in MM/DD/YYYY format and time in HH:MM format. The code currently does check for a conflict between events and notifies you. To delete an event you need to first list all events using the view -> all functionality and then choose the index of the event you wish to delete.
+This is a very simple code. More updates coming soon.
